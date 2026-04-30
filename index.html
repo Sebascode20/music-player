@@ -23,24 +23,34 @@
         />
         <h1 class="card__music-title">Lost in the City Lights</h1>
         <p class="card__music-author">Cosmo Sheldrake</p>
-        <progress
+        <div class="card__music-tempo">
+          <time id="startMusicTempo" datetime="00:00">00:00</time>
+          <time id="endMusicTempo" datetime="00:00">00:00</time>
+        </div>
+        <input
+          id="progressBar"
           class="card__progressbar"
-          role="progressbar"
-          value="0"
+          type="range"
+          min="0"
           max="100"
-        ></progress>
+          value="0"
+          step="1"
+        />
         <div class="controls">
           <img
+            id="prevButton"
             class="controls__stop-play-btn"
             src="./resources/Stop_and_play_fill-1.svg"
             alt="Stop and play button"
           />
           <img
+            id="playButton"
             class="controls__play-btn"
             src="./resources/Play_fill.svg"
             alt="Play button"
           />
           <img
+            id="nextButton"
             class="controls__stop-play-btn-reverse"
             src="./resources/Stop_and_play_fill_reverse.svg"
             alt="Stop and play button reverse"
@@ -60,5 +70,6 @@
         >devChallenges.io</a
       >.
     </footer>
+    <script src="./js/music_player.js" defer></script>
   </body>
 </html>
