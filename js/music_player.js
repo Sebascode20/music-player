@@ -34,12 +34,36 @@ const audio = new Audio(songs[currentSongIndex].src);
 d.getElementById("playButton").addEventListener("click", playPause);
 d.getElementById("nextButton").addEventListener("click", nextSong);
 d.getElementById("prevButton").addEventListener("click", prevSong);
-let audioProgressBar = audio.addEventListener("timeupdate", updateProgressBar);
+document.getElementById("progressBar").addEventListener("input", () => {
+  audio.currentTime = ($progressBar.value / 100) * audio.duration;
+});
+
+audio.addEventListener("ended", () => {
+  $playBtn.setAttribute("src", "./resources/Play_fill.svg");
+  $startMusicTempo.textContent = "0:00";
+  $progressBar.value = 0;
+  $progressBar.style.background = "#e5e7eb";
+});
+
+audio.addEventListener("timeupdate", () => {
+  updateProgressBar();
+  updateCurrentTime();
+});
 
 function playPause() {
   if (audio.paused) {
     audio.play();
     $playBtn.setAttribute("src", "./resources/Pause_fill.svg");
+
+    interval = setInterval(() => {
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+      }
+
+      $startMusicTempo.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }, 1000);
   } else {
     audio.pause();
     $playBtn.setAttribute("src", "./resources/Play_fill.svg");
@@ -51,6 +75,7 @@ function nextSong() {
   else currentSongIndex = 0;
 
   loadSong(currentSongIndex);
+
   playPause();
 }
 
@@ -59,6 +84,7 @@ function prevSong() {
   else currentSongIndex = songs.length - 1;
 
   loadSong(currentSongIndex);
+
   playPause();
 }
 
@@ -70,6 +96,10 @@ function loadSong(currentSongIndex) {
   audio.src = `./resources/${src}`;
   audio.load();
 
+  $startMusicTempo.textContent = "0:00";
+  $progressBar.value = 0;
+  $playBtn.setAttribute("src", "./resources/Play_fill.svg");
+
   audio.addEventListener("loadedmetadata", () => {
     let minutes = Math.floor(audio.duration / 60);
     let seconds = Math.floor(audio.duration % 60);
@@ -78,18 +108,18 @@ function loadSong(currentSongIndex) {
   });
 }
 
+function updateCurrentTime() {
+  const minutes = Math.floor(audio.currentTime / 60);
+  const seconds = Math.floor(audio.currentTime % 60);
+  $startMusicTempo.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+}
+
 function updateProgressBar() {
   const { duration, currentTime } = audio;
   const progressPercent = (currentTime / duration) * 100 || 0;
 
   $progressBar.value = progressPercent;
 
-  $progressBar.style.background = `linear-gradient(to right, #C93B76 ${progressPercent}%, #E5E7EB33 ${progressPercent}%)`;
+  $progressBar.style.background = `linear-gradient(to right, #C93B76 ${progressPercent}%, #e5e7eb ${progressPercent}%)`;
 }
-
-document.getElementById("progressBar").addEventListener("input", () => {
-  audio.currentTime = ($progressBar.value / 100) * audio.duration;
-  updateProgressBar();
-});
-
 loadSong(currentSongIndex);
