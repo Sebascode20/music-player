@@ -54,16 +54,6 @@ function playPause() {
   if (audio.paused) {
     audio.play();
     $playBtn.setAttribute("src", "./resources/Pause_fill.svg");
-
-    interval = setInterval(() => {
-      seconds++;
-      if (seconds === 60) {
-        seconds = 0;
-        minutes++;
-      }
-
-      $startMusicTempo.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    }, 1000);
   } else {
     audio.pause();
     $playBtn.setAttribute("src", "./resources/Play_fill.svg");
